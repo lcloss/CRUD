@@ -130,6 +130,8 @@ class Install extends Command
      */
     public function executeProcess($command, $beforeNotice = false, $afterNotice = false)
     {
+        if ( empty($command) ) return;
+        
         $this->echo('info', $beforeNotice ? ' '.$beforeNotice : $command);
 
         $process = new Process($command, null, null, null, $this->option('timeout'));
