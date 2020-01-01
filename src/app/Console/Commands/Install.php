@@ -70,22 +70,22 @@ class Install extends Command
      */
     public function executeProcess($command, $beforeNotice = false, $afterNotice = false)
     {
-        if ( empty($command) ) return;
-        
         $this->echo('info', $beforeNotice ? ' '.$beforeNotice : $command);
 
-        $process = new Process($command, null, null, null, $this->option('timeout'));
-        $process->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->echo('comment', $buffer);
-            } else {
-                $this->echo('line', $buffer);
-            }
-        });
+        if ( !empty($command) ) {
+            $process = new Process($command, null, null, null, $this->option('timeout'));
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    $this->echo('comment', $buffer);
+                } else {
+                    $this->echo('line', $buffer);
+                }
+            });
 
-        // executes after the command finishes
-        if (! $process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            // executes after the command finishes
+            if (! $process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
         }
 
         if ($this->progressBar) {
